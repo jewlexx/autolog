@@ -33,7 +33,7 @@ pub fn logging_gen(args: TokenStream, input: TokenStream) -> TokenStream {
 
     quote! {
         fn #fn_ident() {
-            println!(#print_message);
+            println!(#print_message, fn_name = stringify!(#fn_ident));
         }
     }
     .into()
