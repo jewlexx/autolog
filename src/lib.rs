@@ -8,7 +8,10 @@ pub fn logging_gen(args: TokenStream, input: TokenStream) -> TokenStream {
 
     let args = parse_macro_input!(args as AttributeArgs);
     let fn_ident = &fn_decl.sig.ident;
-    let mut print_message = quote! { "The #fn_ident function was called" };
+    let mut print_message = {
+        let message = format!("\"{}\" was called", fn_ident);
+        quote! { #message }
+    };
 
     for arg in args {
         match arg {
