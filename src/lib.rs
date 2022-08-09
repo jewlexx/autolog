@@ -12,7 +12,7 @@ macro_rules! macro_error {
 }
 
 #[proc_macro_attribute]
-pub fn logging_gen(
+pub fn sourcegen(
     args: proc_macro::TokenStream,
     input: proc_macro::TokenStream,
 ) -> proc_macro::TokenStream {

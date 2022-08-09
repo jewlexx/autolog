@@ -1,5 +1,5 @@
 [package]
-name = "log-gen"
+name = "sourcegen"
 version = "0.1.0"
 edition = "2021"
 
