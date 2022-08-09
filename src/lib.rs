@@ -1,9 +1,12 @@
-use proc_macro::TokenStream;
+use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::{parse_macro_input, AttributeArgs, ItemFn, Lit, Meta, NestedMeta};
 
 #[proc_macro_attribute]
-pub fn logging_gen(args: TokenStream, input: TokenStream) -> TokenStream {
+pub fn logging_gen(
+    args: proc_macro::TokenStream,
+    input: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
     let fn_decl = parse_macro_input!(input as ItemFn);
 
     let args = parse_macro_input!(args as AttributeArgs);
@@ -56,9 +59,15 @@ pub fn logging_gen(args: TokenStream, input: TokenStream) -> TokenStream {
         }
     }
 
+    let print_args = if print_message.to_string().contains("{fn_name}") {
+        quote! {, fn_name = stringify!(#fn_ident)}
+    } else {
+        TokenStream::new()
+    };
+
     quote! {
         #async_key fn #fn_ident(#fn_args) {
-            println!(#print_message, fn_name = stringify!(#fn_ident));
+            println!(#print_message #print_args);
         }
     }
     .into()
