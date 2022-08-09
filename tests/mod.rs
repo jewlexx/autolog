@@ -1,9 +1,9 @@
 use log_gen::logging_gen;
 
-#[logging_gen("{fn_name} message go here with variable {yo}")]
-fn this_was_called(yo: &str) {
-    let mut x = 5;
-}
+#[test]
+fn test_with_args() {
+    #[logging_gen("{fn_name} message go here with variable {arg1}")]
+    fn with_args(arg1: &str) {}
 
-#[logging_gen]
-async fn this_wasnt_called() {}
+    with_args("arg1");
+}
