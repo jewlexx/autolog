@@ -8,12 +8,11 @@ pub fn logging_gen(args: TokenStream, input: TokenStream) -> TokenStream {
 
     let args = parse_macro_input!(args as AttributeArgs);
     let fn_ident = &fn_decl.sig.ident;
+    let async_key = &fn_decl.sig.asyncness;
     let mut print_message = {
-        let message = format!("\"{}\" was called", fn_ident);
+        let message = r#""{fn_name}" was called"#;
         quote! { #message }
     };
-
-    let mut print_macro = "println";
 
     for arg in args {
         match arg {
@@ -57,7 +56,7 @@ pub fn logging_gen(args: TokenStream, input: TokenStream) -> TokenStream {
     }
 
     quote! {
-        fn #fn_ident() {
+        #async_key fn #fn_ident() {
             println!(#print_message, fn_name = stringify!(#fn_ident));
         }
     }
