@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::{parse_macro_input, AttributeArgs, ItemFn, Lit, Meta, NestedMeta};
+use syn::{parse_macro_input, AttributeArgs, ItemFn, Lit, NestedMeta};
 
 #[proc_macro_attribute]
 pub fn logging_gen(
@@ -31,31 +31,12 @@ pub fn logging_gen(
                     .into();
                 }
             },
-            NestedMeta::Meta(x) => match x {
-                Meta::Path(_) => todo!(),
-                Meta::List(_) => todo!(),
-                Meta::NameValue(val) => {
-                    let val_ident = &val.path.segments.first().unwrap().ident;
-
-                    match val_ident.to_string().as_str() {
-                        "print_macro" => {
-                            let lit: proc_macro2::TokenStream =
-                                val.lit.to_token_stream().to_string().parse().unwrap();
-                            return quote! {
-                                compile_error!(#lit);
-                            }
-                            .into();
-                        }
-                        _ => {
-                            let val_ident_str = val_ident.to_string();
-                            return quote! {
-                                    compile_error!(concat!("invalid argument \"", #val_ident_str, "\""));
-                            }
-                            .into();
-                        }
-                    }
+            _ => {
+                return quote! {
+                        compile_error!("did not expect arguments")
                 }
-            },
+                .into();
+            }
         }
     }
 
