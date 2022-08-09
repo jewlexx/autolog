@@ -49,9 +49,17 @@ pub fn sourcegen(
         TokenStream::new()
     };
 
+    cfg_if::cfg_if! {
+        if #[cfg(feature = "tracing")] {
+            let print_macro = quote! { tracing::debug! };
+        } else {
+            let print_macro = quote! { println! };
+        }
+    };
+
     quote! {
         #async_key fn #fn_ident(#fn_args) {
-            println!(#print_message #print_args);
+            #print_macro (#print_message #print_args);
         }
     }
     .into()
