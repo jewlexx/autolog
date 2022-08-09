@@ -17,3 +17,6 @@ tracing = { version = "0.1.36", optional = true }
 
 [features]
 default = ["tracing"]
+
+[dev-dependencies]
+tracing-subscriber = "0.3.15"
