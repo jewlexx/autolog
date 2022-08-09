@@ -9,6 +9,7 @@ pub fn logging_gen(args: TokenStream, input: TokenStream) -> TokenStream {
     let args = parse_macro_input!(args as AttributeArgs);
     let fn_ident = &fn_decl.sig.ident;
     let async_key = &fn_decl.sig.asyncness;
+    let fn_args = &fn_decl.sig.inputs;
     let mut print_message = {
         let message = r#""{fn_name}" was called"#;
         quote! { #message }
@@ -56,7 +57,7 @@ pub fn logging_gen(args: TokenStream, input: TokenStream) -> TokenStream {
     }
 
     quote! {
-        #async_key fn #fn_ident() {
+        #async_key fn #fn_ident(#fn_args) {
             println!(#print_message, fn_name = stringify!(#fn_ident));
         }
     }
