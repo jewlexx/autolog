@@ -2,6 +2,15 @@ use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::{parse_macro_input, AttributeArgs, ItemFn, Lit, NestedMeta};
 
+macro_rules! macro_error {
+    ($msg:literal) => {
+        quote::quote! {
+            compile_error!($msg);
+        }
+        .into()
+    };
+}
+
 #[proc_macro_attribute]
 pub fn logging_gen(
     args: proc_macro::TokenStream,
@@ -25,17 +34,11 @@ pub fn logging_gen(
                     print_message = x.to_token_stream();
                 }
                 _ => {
-                    return quote! {
-                            compile_error!("expected string literal for logging message.")
-                    }
-                    .into();
+                    return macro_error!("expected string literal for logging message.");
                 }
             },
             _ => {
-                return quote! {
-                        compile_error!("did not expect arguments")
-                }
-                .into();
+                return macro_error!("did not expect arguments");
             }
         }
     }
