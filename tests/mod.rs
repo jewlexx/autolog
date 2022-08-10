@@ -27,8 +27,6 @@ fn test_with_args() {
 
 #[test]
 fn test_no_fn_name() {
-    init_sub();
-
     #[sourcegen("Function was called without fn name as an arg")]
     fn no_fn_name() {}
 
@@ -37,8 +35,6 @@ fn test_no_fn_name() {
 
 #[test]
 fn test_async() {
-    init_sub();
-
     #[sourcegen("\"async\" fn was called with variable \"arg1 = {arg1}\"")]
     async fn with_args(arg1: &str) {}
 
