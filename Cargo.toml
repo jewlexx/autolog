@@ -6,6 +6,7 @@ description = "A mini Rust library for logging when a function is called"
 homepage = "https://github.com/jewlexx/autolog"
 repository = "https://github.com/jewlexx/autolog"
 license = "MIT/Apache-2.0"
+documentation = "https://docs.rs/autolog"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
