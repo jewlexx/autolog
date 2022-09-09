@@ -72,6 +72,16 @@ fn test_fn_name_no_args() {
 }
 
 #[test]
+fn test_default_message() {
+    init_sub();
+
+    #[sourcegen]
+    fn default_message() {}
+
+    default_message();
+}
+
+#[test]
 fn test_async() {
     init_sub();
 
