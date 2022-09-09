@@ -1,6 +1,6 @@
 // NOTE: Unfortunately when using tracing, the tests must be run with `-- --test-threads=1` in order for the tracing messages to show up. Otherwise only the first one will
 
-use sourcegen::sourcegen;
+use autolog::autolog;
 
 #[cfg(feature = "tracing")]
 use parking_lot::Mutex;
@@ -35,7 +35,7 @@ fn init_sub() {
 fn test_with_args() {
     init_sub();
 
-    #[sourcegen("\"{fn_name}\" was called with variable \"arg1 = {arg1}\"")]
+    #[autolog("\"{fn_name}\" was called with variable \"arg1 = {arg1}\"")]
     fn with_args(arg1: &str) {}
 
     with_args("first arg");
@@ -45,7 +45,7 @@ fn test_with_args() {
 fn test_no_fn_name() {
     init_sub();
 
-    #[sourcegen("Function was called without fn name as an arg")]
+    #[autolog("Function was called without fn name as an arg")]
     fn no_fn_name() {}
 
     no_fn_name();
@@ -55,7 +55,7 @@ fn test_no_fn_name() {
 fn test_no_fn_name_args() {
     init_sub();
 
-    #[sourcegen("Function was called without fn name as an arg, but with args: {arg1}, {arg2}")]
+    #[autolog("Function was called without fn name as an arg, but with args: {arg1}, {arg2}")]
     fn no_fn_name_args(arg1: &str, arg2: &str) {}
 
     no_fn_name_args("first arg", "second arg");
@@ -65,7 +65,7 @@ fn test_no_fn_name_args() {
 fn test_fn_name_no_args() {
     init_sub();
 
-    #[sourcegen("\"{fn_name}\" was called without args")]
+    #[autolog("\"{fn_name}\" was called without args")]
     fn fn_name_no_args() {}
 
     fn_name_no_args();
@@ -75,7 +75,7 @@ fn test_fn_name_no_args() {
 fn test_default_message() {
     init_sub();
 
-    #[sourcegen]
+    #[autolog]
     fn default_message() {}
 
     default_message();
@@ -85,7 +85,7 @@ fn test_default_message() {
 fn test_async() {
     init_sub();
 
-    #[sourcegen("\"async\" fn was called with variable \"arg1 = {arg1}\"")]
+    #[autolog("\"async\" fn was called with variable \"arg1 = {arg1}\"")]
     async fn with_args(arg1: &str) {}
 
     smol::block_on(with_args("first arg"));

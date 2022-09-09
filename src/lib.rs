@@ -17,7 +17,7 @@ macro_rules! macro_error {
 }
 
 #[proc_macro_attribute]
-pub fn sourcegen(args: TokenStream1, input: TokenStream1) -> TokenStream1 {
+pub fn autolog(args: TokenStream1, input: TokenStream1) -> TokenStream1 {
     let fn_decl = parse_macro_input!(input as ItemFn);
 
     let args = parse_macro_input!(args as AttributeArgs);
