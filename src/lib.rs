@@ -55,18 +55,18 @@ pub fn autolog(arg_tokens: TokenStream1, input: TokenStream1) -> TokenStream1 {
         return macro_error!("Only one argument is allowed", args[1].span());
     }
 
-    for arg in args {
+    if let Some(arg) = args.get(0) {
         match arg {
             NestedMeta::Lit(x) => match x {
                 Lit::Str(x) => {
                     print_message = x.to_token_stream();
                 }
                 _ => {
-                    return macro_error!("expected string literal for logging message.");
+                    return macro_error!("expected string literal for logging message", x.span());
                 }
             },
             _ => {
-                return macro_error!("did not expect arguments");
+                return macro_error!("expected string literal for logging message", arg.span());
             }
         }
     }
