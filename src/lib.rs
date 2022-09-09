@@ -22,7 +22,7 @@ macro_rules! macro_error {
 ///
 /// The default message prints the function name and the arguments passed to the function
 ///
-/// In the custom message, the function name and arguments passed to the function are available as `fn_name` and the argument names respectively
+/// In the custom message, the function name and arguments passed to the function are available as `fn_name`
 ///
 /// # Examples
 /// ```
@@ -41,24 +41,8 @@ pub fn autolog(args: TokenStream1, input: TokenStream1) -> TokenStream1 {
     let fn_ident = &fn_decl.sig.ident;
     let async_key = &fn_decl.sig.asyncness;
     let fn_args = &fn_decl.sig.inputs;
-    let mut print_message = {
-        let mut message = String::from(r#""{fn_name}" was called"#);
 
-        if !fn_args.is_empty() {
-            message.push_str(" with variable(s): ");
-            for (i, arg) in fn_args.iter().enumerate() {
-                if i > 0 {
-                    message.push_str(", ");
-                }
-                let arg_expr = arg.to_token_stream().to_string();
-                let arg_name = arg_expr.split(':').next().unwrap();
-
-                message.push_str(format!("{arg_name} = {{{arg_name}}}").as_str());
-            }
-        }
-
-        quote! { #message }
-    };
+    let mut print_message = quote!("\"{fn_name}\" was called");
 
     for arg in args {
         match arg {

@@ -82,16 +82,6 @@ fn test_default_message() {
 }
 
 #[test]
-fn test_default_message_args() {
-    init_sub();
-
-    #[autolog]
-    fn default_message(arg1: &str) {}
-
-    default_message("first arg");
-}
-
-#[test]
 fn test_async() {
     init_sub();
 
