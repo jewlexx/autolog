@@ -5,11 +5,18 @@
 use proc_macro::TokenStream as TokenStream1;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::{parse_macro_input, AttributeArgs, ItemFn, Lit, NestedMeta};
+use syn::{parse_macro_input, spanned::Spanned, AttributeArgs, ItemFn, Lit, NestedMeta};
 
 macro_rules! macro_error {
     ($msg:literal) => {
         quote::quote! {
+            compile_error!($msg);
+        }
+        .into()
+    };
+
+    ($msg:literal, $span:expr) => {
+        quote::quote_spanned! { $span =>
             compile_error!($msg);
         }
         .into()
@@ -34,15 +41,19 @@ macro_rules! macro_error {
 /// }
 /// ```
 #[proc_macro_attribute]
-pub fn autolog(args: TokenStream1, input: TokenStream1) -> TokenStream1 {
+pub fn autolog(arg_tokens: TokenStream1, input: TokenStream1) -> TokenStream1 {
     let fn_decl = parse_macro_input!(input as ItemFn);
 
-    let args = parse_macro_input!(args as AttributeArgs);
+    let args = parse_macro_input!(arg_tokens as AttributeArgs);
     let fn_ident = &fn_decl.sig.ident;
     let async_key = &fn_decl.sig.asyncness;
     let fn_args = &fn_decl.sig.inputs;
 
     let mut print_message = quote!("\"{fn_name}\" was called");
+
+    if args.len() > 1 {
+        return macro_error!("Only one argument is allowed", args[1].span());
+    }
 
     for arg in args {
         match arg {
