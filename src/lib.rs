@@ -1,3 +1,6 @@
+#![forbid(unsafe_code)]
+// #![warn(missing_docs)]
+
 use proc_macro::TokenStream as TokenStream1;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
