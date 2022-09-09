@@ -1,3 +1,4 @@
+use proc_macro::TokenStream as TokenStream1;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::{parse_macro_input, AttributeArgs, ItemFn, Lit, NestedMeta};
@@ -12,10 +13,7 @@ macro_rules! macro_error {
 }
 
 #[proc_macro_attribute]
-pub fn sourcegen(
-    args: proc_macro::TokenStream,
-    input: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
+pub fn sourcegen(args: TokenStream1, input: TokenStream1) -> TokenStream1 {
     let fn_decl = parse_macro_input!(input as ItemFn);
 
     let args = parse_macro_input!(args as AttributeArgs);
@@ -49,12 +47,10 @@ pub fn sourcegen(
         TokenStream::new()
     };
 
-    cfg_if::cfg_if! {
-        if #[cfg(feature = "tracing")] {
-            let print_macro = quote! { tracing::debug! };
-        } else {
-            let print_macro = quote! { println! };
-        }
+    let print_macro = if cfg!(feature = "tracing") {
+        quote! { tracing::trace! }
+    } else {
+        quote! { println! }
     };
 
     quote! {
