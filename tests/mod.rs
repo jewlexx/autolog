@@ -38,7 +38,7 @@ fn test_with_args() {
     #[sourcegen("\"{fn_name}\" was called with variable \"arg1 = {arg1}\"")]
     fn with_args(arg1: &str) {}
 
-    with_args("first argument");
+    with_args("first arg");
 }
 
 #[test]
@@ -52,11 +52,31 @@ fn test_no_fn_name() {
 }
 
 #[test]
+fn test_no_fn_name_args() {
+    init_sub();
+
+    #[sourcegen("Function was called without fn name as an arg, but with args: {arg1}, {arg2}")]
+    fn no_fn_name_args(arg1: &str, arg2: &str) {}
+
+    no_fn_name_args("first arg", "second arg");
+}
+
+#[test]
+fn test_fn_name_no_args() {
+    init_sub();
+
+    #[sourcegen("\"{fn_name}\" was called without args")]
+    fn fn_name_no_args() {}
+
+    fn_name_no_args();
+}
+
+#[test]
 fn test_async() {
     init_sub();
 
     #[sourcegen("\"async\" fn was called with variable \"arg1 = {arg1}\"")]
     async fn with_args(arg1: &str) {}
 
-    smol::block_on(with_args("first argument"));
+    smol::block_on(with_args("first arg"));
 }
