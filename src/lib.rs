@@ -16,6 +16,23 @@ macro_rules! macro_error {
     };
 }
 
+/// The main autolog macro
+///
+/// When this macro is applied to a function, it will log either the default message or the provided string literal
+///
+/// The default message prints the function name and the arguments passed to the function
+///
+/// In the custom message, the function name and arguments passed to the function are available as `fn_name` and the argument names respectively
+///
+/// # Examples
+/// ```
+/// # use autolog::autolog;
+///
+/// #[autolog]
+/// fn default_message(name: &str) {
+///    println!("Hello, {}!", name);
+/// }
+/// ```
 #[proc_macro_attribute]
 pub fn autolog(args: TokenStream1, input: TokenStream1) -> TokenStream1 {
     let fn_decl = parse_macro_input!(input as ItemFn);
@@ -25,7 +42,18 @@ pub fn autolog(args: TokenStream1, input: TokenStream1) -> TokenStream1 {
     let async_key = &fn_decl.sig.asyncness;
     let fn_args = &fn_decl.sig.inputs;
     let mut print_message = {
-        let message = r#""{fn_name}" was called"#;
+        let mut message = String::from(r#""{fn_name}" was called"#);
+
+        if !fn_args.is_empty() {
+            message.push_str(" with variable(s): ");
+            for (i, arg) in fn_args.iter().enumerate() {
+                if i > 0 {
+                    message.push_str(", ");
+                }
+                message.push_str(&arg.to_token_stream().to_string());
+            }
+        }
+
         quote! { #message }
     };
 

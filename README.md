@@ -26,6 +26,9 @@ autolog = "0.1"
 
 ```rust
 use autolog::autolog;
+// or
+#[macro_use]
+extern crate autolog;
 
 #[autolog]
 fn main() {
