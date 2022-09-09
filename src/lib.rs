@@ -50,7 +50,10 @@ pub fn autolog(args: TokenStream1, input: TokenStream1) -> TokenStream1 {
                 if i > 0 {
                     message.push_str(", ");
                 }
-                message.push_str(&arg.to_token_stream().to_string());
+                let arg_expr = arg.to_token_stream().to_string();
+                let arg_name = arg_expr.split(':').next().unwrap();
+
+                message.push_str(format!("{arg_name} = {{{arg_name}}}").as_str());
             }
         }
 
