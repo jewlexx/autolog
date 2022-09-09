@@ -1,3 +1,5 @@
+// NOTE: Unfortunately when using tracing, the tests must be run with `-- --test-threads=1` in order for the tracing messages to show up. Otherwise only the first one will
+
 use sourcegen::sourcegen;
 
 #[cfg(feature = "tracing")]
