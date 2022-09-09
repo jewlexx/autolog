@@ -1,7 +1,11 @@
 [package]
 name = "autolog"
 version = "0.1.0"
-edition = "2021"
+edition = "2018"
+description = "A mini Rust library for logging when a function is called"
+homepage = "https://github.com/jewlexx/autolog"
+repository = "https://github.com/jewlexx/autolog"
+license = "MIT/Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
