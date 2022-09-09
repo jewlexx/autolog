@@ -1,6 +1,13 @@
+use parking_lot::Mutex;
 use sourcegen::sourcegen;
 
+static TRACING_ENABLED: Mutex<bool> = Mutex::new(false);
+
 fn init_sub() {
+    if *TRACING_ENABLED.lock() {
+        return;
+    }
+
     use tracing::Level;
     use tracing_subscriber::*;
 
@@ -38,5 +45,5 @@ fn test_async() {
     #[sourcegen("\"async\" fn was called with variable \"arg1 = {arg1}\"")]
     async fn with_args(arg1: &str) {}
 
-    with_args("first argument");
+    smol::block_on(with_args("first argument"));
 }

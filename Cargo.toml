@@ -19,4 +19,9 @@ tracing = { version = "0.1.36", optional = true }
 default = ["tracing"]
 
 [dev-dependencies]
+# Used to tell whether tracing is enabled or not
+parking_lot = "0.12.1"
+# Used for async testing
+smol = "1.2.5"
+# Used to test tracing
 tracing-subscriber = "0.3.15"
