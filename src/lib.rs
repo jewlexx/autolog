@@ -34,7 +34,6 @@ macro_rules! macro_error {
 /// # Examples
 /// ```
 /// # use autolog::autolog;
-///
 /// #[autolog]
 /// fn default_message(name: &str) {
 ///    println!("Hello, {}!", name);
