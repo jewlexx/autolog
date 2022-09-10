@@ -85,7 +85,7 @@ fn test_default_message() {
 fn test_async() {
     init_sub();
 
-    #[autolog("\"async\" fn was called with variable \"arg1 = {arg1}\"")]
+    #[autolog(level = "yo")]
     async fn with_args(arg1: &str) {}
 
     smol::block_on(with_args("first arg"));

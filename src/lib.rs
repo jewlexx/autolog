@@ -4,18 +4,18 @@
 
 use proc_macro::TokenStream as TokenStream1;
 use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
+use quote::{quote, ToTokens, __private::ext::RepToTokensExt};
 use syn::{parse_macro_input, spanned::Spanned, AttributeArgs, ItemFn, Lit, NestedMeta};
 
 macro_rules! macro_error {
-    ($msg:literal) => {
+    ($msg:expr) => {
         quote::quote! {
             compile_error!($msg);
         }
         .into()
     };
 
-    ($msg:literal, $span:expr) => {
+    ($msg:tt, $span:expr) => {
         quote::quote_spanned! { $span =>
             compile_error!($msg);
         }
@@ -50,22 +50,36 @@ pub fn autolog(arg_tokens: TokenStream1, input: TokenStream1) -> TokenStream1 {
 
     let mut print_message = quote!("\"{fn_name}\" was called");
 
-    if args.len() > 1 {
-        return macro_error!("Only one argument is allowed", args[1].span());
-    }
-
-    if let Some(arg) = args.get(0) {
+    for (i, arg) in args.iter().enumerate() {
         match arg {
-            NestedMeta::Lit(x) => match x {
-                Lit::Str(x) => {
-                    print_message = x.to_token_stream();
+            NestedMeta::Lit(x) => {
+                if i == 0 {
+                    match x {
+                        Lit::Str(x) => {
+                            print_message = x.to_token_stream();
+                        }
+                        _ => {
+                            return macro_error!(
+                                "expected string literal for logging message",
+                                x.span()
+                            );
+                        }
+                    }
+                } else {
+                    return macro_error!("logging message must be the first argument", arg.span());
                 }
-                _ => {
-                    return macro_error!("expected string literal for logging message", x.span());
+            }
+            NestedMeta::Meta(x) => {
+                if i == 0 {
+                    return macro_error!("logging message must be a string literal", x.span());
                 }
-            },
-            _ => {
-                return macro_error!("expected string literal for logging message", arg.span());
+
+                let p = x.path().to_token_stream().to_string();
+
+                return quote! {
+                    compile_error!(#p);
+                }
+                .into();
             }
         }
     }
